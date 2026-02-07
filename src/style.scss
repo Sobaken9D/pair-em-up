@@ -1,0 +1,179 @@
+.wrapper {
+  margin: 0 auto;
+  width: 1440px;
+}
+
+.title {
+  text-align: center;
+}
+
+.menu-buttons-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.buttons-block__button {
+  padding: 7px 16px;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
+.game-button {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+.game-button_selected {
+  background-color: lightgray;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 250px;
+}
+
+.game-block {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  width: calc(9 * 70px + 8 * 10px);
+}
+
+.info-block {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 200px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.eraser-button_active {
+  background-color: lightgray;
+  border: 2px solid black;
+}
+
+.timer-block {
+  text-align: left;
+}
+
+.options-button {
+  margin-top: 10px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  min-height: 150px;
+  overflow-y: auto;
+  margin: 100px auto;
+  position: relative;
+}
+
+.modal-close-button {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid black;
+  right: 15px;
+  top: 15px;
+  font-size: 28px;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-buttons-block {
+
+  margin: 30px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  row-gap: 15px;
+}
+
+.modal-button {
+  width: 130px;
+  padding: 10px 0px;
+}
+
+.history-table {
+  height: 70%;
+  width: 70%;
+  margin: 72px auto;
+}
+
+table {
+  text-align: center;
+  border-collapse: collapse;
+  border: 2px solid rgb(140 140 140);
+  font-family: sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+caption {
+  caption-side: bottom;
+  padding: 10px;
+  font-weight: bold;
+}
+
+thead,
+tfoot {
+  background-color: rgb(228 240 245);
+}
+
+th,
+td {
+  border: 1px solid rgb(160 160 160);
+  padding: 8px 10px;
+}
+
+td:last-of-type {
+  text-align: center;
+}
+
+tbody > tr:nth-of-type(even) {
+  background-color: rgb(237 238 242);
+}
+
+tfoot th {
+  text-align: right;
+}
+
+tfoot td {
+  font-weight: bold;
+}
+
+.modal-info-block {
+  margin: 30px auto;
+  text-align: center;
+}
