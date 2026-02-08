@@ -1,5 +1,6 @@
 export const DataStorage = {
   setClassicModeData(data) {
+    console.log('NEW CLASSIC DATA');
     localStorage.setItem("classicModeData", JSON.stringify(data));
   },
 
@@ -51,5 +52,18 @@ export const DataStorage = {
 
   clearScoreHistoryData() {
     localStorage.removeItem("scoreHistoryData");
+  },
+
+  setGameOptionsData(data) {
+    localStorage.setItem("gameOptionsData", JSON.stringify(data));
+  },
+
+  getGameOptionsData() {
+    const data = localStorage.getItem("gameOptionsData");
+    return data ? JSON.parse(data) : {};
+  },
+
+  clearGameOptionsData() {
+    localStorage.removeItem("gameOptionsData");
   },
 }

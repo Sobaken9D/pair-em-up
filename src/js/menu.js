@@ -1,32 +1,38 @@
 import {DataStorage} from "./data_storage.js";
-import ClassicMode from "./classic_mode.js";
+import menuClickSound from "../assets/sounds/click_2.mp3";
 
 export default function Menu() {
   const buttonsBlock = document.createElement('div');
   buttonsBlock.classList.add('menu-buttons-block');
 
   const classicModeButton = document.createElement('button');
-  classicModeButton.classList.add('buttons-block__button');
+  classicModeButton.classList.add('buttons-block__button', 'menu-button');
   classicModeButton.innerText = 'Classic';
   classicModeButton.id = 'classic-mode-button';
 
   const randomModeButton = document.createElement('button');
-  randomModeButton.classList.add('buttons-block__button');
+  randomModeButton.classList.add('buttons-block__button', 'menu-button');
   randomModeButton.innerText = 'Random';
   randomModeButton.id = 'random-mode-button';
 
   const chaoticModeButton = document.createElement('button');
-  chaoticModeButton.classList.add('buttons-block__button');
+  chaoticModeButton.classList.add('buttons-block__button', 'menu-button');
   chaoticModeButton.innerText = 'Chaotic';
   chaoticModeButton.id = 'chaotic-mode-button';
 
   const menuOptionButton = document.createElement('button');
-  menuOptionButton.classList.add('buttons-block__button');
-  menuOptionButton.innerText = 'History Options';
+  menuOptionButton.classList.add('buttons-block__button', 'menu-button');
+  menuOptionButton.innerText = 'Options';
   menuOptionButton.id = 'menu-options-button';
   menuOptionButton.addEventListener('click', handleClickOptionsButton);
 
   buttonsBlock.append(classicModeButton, randomModeButton, chaoticModeButton, menuOptionButton);
+
+  buttonsBlock.querySelectorAll('.menu-button').forEach(button => {
+    button.addEventListener('click', () => {
+      playSound(menuClickSound);
+    });
+  });
 
   return buttonsBlock;
 };
@@ -63,14 +69,14 @@ function createOptionsModal() {
   modalButtonsBlock.classList.add('modal-buttons-block');
   modalButtonsBlock.id = 'modal-buttons-block';
 
-  let restartButton = document.createElement("button");
-  restartButton.classList.add('modal-history-button', 'modal-button');
-  restartButton.id = 'modal-history-button';
-  restartButton.innerText = 'History';
+  let historyButton = document.createElement("button");
+  historyButton.classList.add('modal-history-button', 'modal-button');
+  historyButton.id = 'modal-history-button';
+  historyButton.innerText = 'History';
   if (!DataStorage.getScoreHistoryData().length) {
-    restartButton.setAttribute('disabled', 'disabled');
+    historyButton.setAttribute('disabled', 'disabled');
   }
-  restartButton.addEventListener('click', handleClickHistoryButton);
+  historyButton.addEventListener('click', handleClickHistoryButton);
 
   let clearHistoryButton = document.createElement("button");
   clearHistoryButton.classList.add('modal-history-button', 'modal-button');
@@ -81,9 +87,22 @@ function createOptionsModal() {
   }
   clearHistoryButton.addEventListener('click', handleClickClearHistoryButton);
 
-  modalButtonsBlock.append(restartButton, clearHistoryButton);
+  let soundsOptionsButton = document.createElement("button");
+  soundsOptionsButton.classList.add('modal-sounds-options-button', 'modal-button');
+  soundsOptionsButton.id = 'modal-sounds-options-button';
+  soundsOptionsButton.innerText = 'Sounds';
+  soundsOptionsButton.addEventListener('click', handleClickSoundsButton);
+
+  modalButtonsBlock.append(historyButton, clearHistoryButton, soundsOptionsButton);
   modalContent.append(closeButton, modalButtonsBlock);
   modalOverlay.append(modalContent);
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      playSound(menuClickSound);
+    }
+  });
+
   return modalOverlay;
 }
 
@@ -154,4 +173,57 @@ function handleClickClearHistoryButton() { // anctive incative
   historyButton.setAttribute('disabled', 'disabled');
 
   DataStorage.clearScoreHistoryData();
+}
+
+function handleClickSoundsButton() {
+  let modalButtonsBlock = document.getElementById('modal-buttons-block');
+  if (!modalButtonsBlock) return;
+
+  let parent = modalButtonsBlock.parentElement;
+  if (!parent) return;
+
+  if (Object.keys(DataStorage.getGameOptionsData()).length === 0) {
+    DataStorage.setGameOptionsData({
+      soundsSettings: {
+        volume: "50"
+      }
+    });
+  }
+
+  let soundsOptionsBlock = document.createElement('div');
+  soundsOptionsBlock.classList.add('sounds-options-block');
+
+  let textVolume = document.createElement('p');
+  textVolume.classList.add('volume-text');
+  textVolume.innerText = `Volume: `;
+
+  let inputVolume = document.createElement('input');
+  inputVolume.classList.add('volume-slider');
+  inputVolume.type = 'range';
+  inputVolume.min = '0';
+  inputVolume.max = '100';
+  inputVolume.step = '1';
+  console.log(DataStorage.getGameOptionsData().soundsSettings);
+  inputVolume.value = DataStorage.getGameOptionsData().soundsSettings.volume;
+  inputVolume.addEventListener('change', (e) => {
+    let newData = {
+      ...DataStorage.getGameOptionsData(),
+      soundsSettings: {
+        ...DataStorage.getGameOptionsData().soundsSettings,
+        volume: e.target.value
+      }
+    };
+    DataStorage.setGameOptionsData(newData);
+  });
+
+  soundsOptionsBlock.append(textVolume, inputVolume);
+
+  modalButtonsBlock.remove();
+  parent.appendChild(soundsOptionsBlock);
+}
+
+function playSound(sound) {
+  const audio = new Audio(sound);
+  audio.volume = Number(DataStorage.getGameOptionsData().soundsSettings.volume) / 100;
+  audio.play();
 }

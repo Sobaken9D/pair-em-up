@@ -26,6 +26,7 @@ classicModeButton.addEventListener('click', () => {
   }
 
   const ClassicModeElement = ClassicMode();
+
   localStorage.setItem('currentMode', 'Classic');
   wrapper.append(ClassicModeElement);
 });
@@ -57,8 +58,7 @@ chaoticModeButton.addEventListener('click', () => {
 window.addEventListener('beforeunload', () => {
   let newObj = {...DataStorage.getClassicModeData()};
 
-  console.log(newObj);
-  newObj.timer.paused = true;
+  newObj.timer.paused = true; // нету когда только зашли
   newObj.timer.pausedAt = Date.now();
 
   if (newObj.timer.timerInterval) {
@@ -76,6 +76,7 @@ window.addEventListener('beforeunload', () => {
 
 window.addEventListener('load', () => {
   let currentMode = localStorage.getItem('currentMode');
+  let options = DataStorage.getGameOptionsData();
 
   let condition =
     Object.keys(DataStorage.getClassicModeData()).length > 0 ||

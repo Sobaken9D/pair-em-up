@@ -1,6 +1,12 @@
 import {DataStorage} from "./data_storage.js";
+import winSound from "../assets/sounds/win.mp3";
+import loseSound from "../assets/sounds/lose.mp3";
+import menuClickSound from "../assets/sounds/click_2.mp3";
+import gameClickSound from "../assets/sounds/click_1.mp3";
 
 export default function ClassicMode(data) {
+  // console.log('NEW CLASSIC MODE');
+
   const container = document.createElement("div");
   container.classList.add('container');
   container.id = 'container';
@@ -87,6 +93,12 @@ export default function ClassicMode(data) {
   const optionsButton = createOptionsButton(gameState);
 
   infoClassicGameBlock.append(timerBlock, pointsBlock, validMovesBlock, addNumbersButton, shuffleButton, eraserButton, optionsButton);
+
+  infoClassicGameBlock.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      playSound(menuClickSound);
+    }
+  });
 
   let mainElementsArray = createMainElementsArray(gameState);
 
@@ -345,8 +357,10 @@ function handledDigitGameButtonClick(e, selectedButtons, mainArrayOfRowsDigits, 
     checkLose(gameState);
 
     DataStorage.setClassicModeData(gameState);
+
   }
 
+  playSound(gameClickSound);
 }
 
 function handleUpdatePointsButton(gameState, addScore) {
@@ -536,6 +550,8 @@ function handleWin(gameState) {
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
   document.body.append(modal);
+
+  playSound(winSound);
 }
 
 function checkLose(gameState) {
@@ -559,6 +575,8 @@ function handleLose(gameState) {
   modal.style.display = 'block';
   document.body.style.overflow = 'hidden';
   document.body.append(modal);
+
+  playSound(loseSound);
 }
 
 function calculateValidMoves(gameState) {
@@ -641,8 +659,6 @@ function updateTimer(gameState) {
   if (timerElement) {
     timerElement.innerText = `Time: ${strTime}`;
   }
-
-  DataStorage.setClassicModeData(gameState);
 }
 
 function stopTimer(gameState) {
@@ -744,6 +760,13 @@ function createOptionsModal(gameState) {
   modalButtonsBlock.append(restartButton, backToMenuButton);
   modalContent.append(closeButton, modalButtonsBlock);
   modalOverlay.append(modalContent);
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      playSound(menuClickSound);
+    }
+  });
+
   return modalOverlay;
 }
 
@@ -809,6 +832,13 @@ function createEndGameModal(gameState) {
   modalButtonsBlock.append(restartButton, backToMenuButton);
   modalContent.append(modalInfoBlock, modalButtonsBlock);
   modalOverlay.append(modalContent);
+
+  modalOverlay.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON') {
+      playSound(menuClickSound);
+    }
+  });
+
   return modalOverlay;
 }
 
@@ -830,4 +860,10 @@ function handleClickBackToMenuButton(event, gameState) {
   }
 
   DataStorage.clearClassicModeData();
+}
+
+function playSound (sound) {
+  const audio = new Audio(sound);
+  audio.volume = Number(DataStorage.getGameOptionsData().soundsSettings.volume) / 100;
+  audio.play();
 }
